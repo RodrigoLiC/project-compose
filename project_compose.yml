@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  java-service:
+    image: rodrigoli/java-project-image
+    container_name: java-service
+    environment:
+      - APP_PORT=8011
+      - DB_HOST=34.237.90.249
+      - DB_NAME=estudiantes_y_inscripciones
+      - PYTHON_API_URL=http://python-service:8000/cursos/
+    ports:
+      - "8011:8011"
+    networks:
+      - microservice-network
+
+  python-service:
+    image: rodrigoli/python-project-image
+    container_name: python-service
+    environment:
+      - DB_HOST=34.237.90.249
+      - DB_PORT=8005
+      - DB_NAME=profesores_y_cursos
+      - DB_PASS=utec
+    ports:
+      - "8012:8000"
+    networks:
+      - microservice-network
+
+  node-service:
+    image: rodrigoli/nodejs-project-image
+    container_name: node-service
+    environment:
+      - APP_PORT=8013
+      - DB_HOST=34.237.90.249
+      - DB_NAME=reserva_y_espacios
+      - DB_PORT=27017
+      - PYTHON_API_URL=http://python-service:8000/cursos/
+    ports:
+      - "8013:8013"
+    networks:
+      - microservice-network
+
+networks:
+  microservice-network:
+    driver: bridge
